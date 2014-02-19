@@ -43,14 +43,22 @@ class ball(object):
    def move(self):
      self.x_pos += self.x_sign * self.speedx
      self.y_pos += self.y_sign * self.speedy
+     if(self.speedx <3):
+         self.speedx=3
+     if(self.speedy <3):
+         self.speedy=3
+     if(self.speedx >10):
+         self.speedx=10
+     if(self.speedy >10):
+         self.speedy=10
      pos = (self.x_pos,self.y_pos)
    def reset(self):
      w = self.screen.get_width()
      h = self.screen.get_height()
      self.x_pos = random.randint(w/2-30,w/2+30)
      self.y_pos = random.randint(h/2-30,h/2+30)
-     self.speedx = 5
-     self.speedy = 5
+     self.speedx = random.randint(3,7)
+     self.speedy = random.randint(3,7)
      self.x_sign *= -1
      self.y_sign *= -1
      self.draw()
@@ -144,6 +152,26 @@ class Pong(object):
 
             flag1 = bat1.Rect.collidepoint(ball1.x_pos,ball1.y_pos) 
             flag2 = bat2.Rect.collidepoint(ball1.x_pos,ball1.y_pos) 
+#            if(flag1):
+            if(flag1):
+                if((ball1.x_pos >= bat1.Rect.left) and (ball1.x_pos <= bat1.Rect.left + bat1.Rect.width/4)):
+                    ball1.speedx +=1
+                    ball1.speedy -=1
+                    ball1.x_sign =-1
+                if((ball1.x_pos >= bat1.Rect.left + 3*bat1.Rect.width/4) and (ball1.x_pos <= bat1.Rect.left + bat1.Rect.width)):
+                    ball1.speedx +=1
+                    ball1.speedy -=1
+                    ball1.x_sign =1
+            if(flag2):
+                if((ball1.x_pos >= bat2.Rect.left) and (ball1.x_pos <= bat2.Rect.left + bat2.Rect.width/4)):
+                    ball1.speedx +=1
+                    ball1.speedy -=1
+                    ball1.x_sign =-1
+                if((ball1.x_pos >= bat2.Rect.left + 3*bat2.Rect.width/4) and (ball1.x_pos <= bat2.Rect.left + bat2.Rect.width)):
+                    ball1.speedx +=1
+                    ball1.speedy -=1
+                    ball1.x_sign =1
+
             if(flag1 or flag2):
                ball1.y_sign *=-1
                pygame.mixer.music.play()
