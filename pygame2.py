@@ -101,8 +101,8 @@ class Pong(object):
         screen_rect = pygame.Rect(0,0,screen.get_width(),screen.get_height())
    #boundaries
    #def __init__(self,left,top,width,height,color):
-        bat1 = bat(10,10,50,10,WHITE,screen_rect)
-        bat2 = bat(10,(screen.get_height()-20),50,10,WHITE,screen_rect)
+        bat1 = bat(10,40,50,10,WHITE,screen_rect)
+        bat2 = bat(10,(screen.get_height()-50),50,10,WHITE,screen_rect)
         circle_pos = (10+(screen.get_width()>>1),screen.get_height()>>1)
         circle_radius = 4
         ball1 = ball(screen,WHITE,circle_pos,circle_radius)
