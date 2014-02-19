@@ -1,7 +1,7 @@
 import pygame
 BLACK=(0,0,0)
 WHITE=(255,255,255)
-WINNING_SCORE=20
+MAX_SPEED=20
 import random
 
 def display_box(screen, message,pos):
@@ -23,8 +23,8 @@ class boundary(object):
 class ball(object):
    bounces=0
    width = 0
-   speedx = 4
-   speedy = 4
+   speedx = 10
+   speedy = 10
    x_sign = 1
    y_sign = 1
    x_pos=0
@@ -47,10 +47,10 @@ class ball(object):
          self.speedx=3
      if(self.speedy <3):
          self.speedy=3
-     if(self.speedx >10):
-         self.speedx=10
-     if(self.speedy >10):
-         self.speedy=10
+     if(self.speedx >MAX_SPEED):
+         self.speedx=MAX_SPEED
+     if(self.speedy >MAX_SPEED):
+         self.speedy=MAX_SPEED
      pos = (self.x_pos,self.y_pos)
    def reset(self):
      w = self.screen.get_width()
@@ -64,7 +64,7 @@ class ball(object):
      self.draw()
    
 class bat(object):
-   offset=5
+   offset=7
    count_left = 0
    count_right= 0
    score=0
