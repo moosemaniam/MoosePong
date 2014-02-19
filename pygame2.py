@@ -146,6 +146,7 @@ class Pong(object):
             flag2 = bat2.Rect.collidepoint(ball1.x_pos,ball1.y_pos) 
             if(flag1 or flag2):
                ball1.y_sign *=-1
+               pygame.mixer.music.play()
 
 
             ball1.draw()
@@ -172,7 +173,10 @@ pygame.init()
 #Create a screen
 w=400 
 h=600
+pygame.mixer.init()
 pygame.display.set_caption("Moose Pong")
+beep1="beep1.wav"
+pygame.mixer.music.load(beep1)
 screen = pygame.display.set_mode((w,h))
 pygame.key.set_repeat(5,100)
 pong_game = Pong()
