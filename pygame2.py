@@ -101,7 +101,7 @@ class bat(object):
 #ai bat is going to follow the ball and try to hit it
 
 class ai_bat(bat):
-
+   offset=4
    def ai_magic(self,x): 
            if(x <= self.Rect.centerx):
             self.move_left()
@@ -149,11 +149,14 @@ class Pong(object):
             ball1.move() 
             bat2.update_stuff()
 #Ai bat moves only if the ball is moving in its direction
-            if((ball1.y_sign ==-1) and (count%20!=0) and (ball1.y_pos<screen.get_height()/2)):
-             ai_bat1.ai_magic(ball1.x_pos)
+            if((ball1.y_sign ==-1)  and (ball1.y_pos<screen.get_height()*3/10)):
+                if(count >=8 and count <=12):
+                    ai_bat1.ai_magic(ball1.x_pos + random.randint(0,screen.get_width()))
+                else:
+                    ai_bat1.ai_magic(ball1.x_pos)
             else:
 #Ai bat goes back to sit in the center. Better chance of catching the ball this way
-             ai_bat1.ai_magic(screen.get_width()/2 - (screen.get_width()/2)%(ai_bat1.Rect.width/2))
+                ai_bat1.ai_magic(screen.get_width()/2 - (screen.get_width()/2)%(ai_bat1.Rect.width/2))
             ai_bat1.update_stuff()
             #Code for collission detection between the ball and the walls
             b_flag_sides = (ball1.x_pos-ball1.radius <= screen_rect.left) or(ball1.x_pos+ball1.radius >= screen_rect.right)
