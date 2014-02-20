@@ -22,6 +22,7 @@ class boundary(object):
    def draw(self,screen):
     screen.fill(self.color,self.Rect)
 class ball(object):
+   reset_flag=False
    bounces=0
    width = 0
    speedx = 10
@@ -62,12 +63,13 @@ class ball(object):
      self.speedy = random.randint(3,7)
      self.x_sign *= -1
      self.y_sign *= -1
+     self.reset_flag=True
      self.draw()
    
 class bat(object):
    offset=7
-   count_left = 0
-   count_right= 0
+   count_left = 20 
+   count_right= 20
    score=0
    def __init__(self,left,top,width,height,color,ScreenRect):
        self.Rect = pygame.Rect(left,top,width,height) 
@@ -147,9 +149,10 @@ class Pong(object):
             ball1.move() 
             bat2.update_stuff()
 #Ai bat moves only if the ball is moving in its direction
-            if(ball1.y_sign ==-1 and (count%20!=0)):
+            if((ball1.y_sign ==-1) and (count%20!=0) and (ball1.y_pos<screen.get_height()/2)):
              ai_bat1.ai_magic(ball1.x_pos)
             else:
+#Ai bat goes back to sit in the center. Better chance of catching the ball this way
              ai_bat1.ai_magic(screen.get_width()/2 - (screen.get_width()/2)%(ai_bat1.Rect.width/2))
             ai_bat1.update_stuff()
             #Code for collission detection between the ball and the walls
@@ -203,7 +206,9 @@ class Pong(object):
             msg2 = str(bat2.score)
             display_box(screen,msg2,(wsize-40,hsize-90))
             pygame.display.flip()
-
+            if(ball1.reset_flag == True):
+                clock1.tick(2*FPS)
+                ball1.reset_flag = False
             clock1.tick(FPS)
 
 
