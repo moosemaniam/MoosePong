@@ -2,6 +2,7 @@ import pygame
 BLACK=(0,0,0)
 WHITE=(255,255,255)
 MAX_SPEED=20
+FPS = 30
 import random
 
 def display_box(screen, message,pos):
@@ -95,7 +96,15 @@ class bat(object):
             self.Rect.move_ip(self.offset,0) 
             self.Rect= self.Rect.clamp(self.ScreenRect)
           self.count_right-=1
+#ai bat is going to follow the ball and try to hit it
 
+class ai_bat(bat):
+
+   def ai_magic(self,x): 
+           if(x <= self.Rect.centerx):
+            self.move_left()
+           if(x >= self.Rect.centerx):
+            self.move_right()
 
 class Pong(object):
       def main(self,screen):
@@ -109,32 +118,40 @@ class Pong(object):
         screen_rect = pygame.Rect(0,0,screen.get_width(),screen.get_height())
    #boundaries
    #def __init__(self,left,top,width,height,color):
-        bat1 = bat(10,40,50,10,WHITE,screen_rect)
+        ai_bat1 = ai_bat(10,40,50,10,WHITE,screen_rect)
         bat2 = bat(10,(screen.get_height()-50),50,10,WHITE,screen_rect)
         circle_pos = (10+(screen.get_width()>>1),screen.get_height()>>1)
         circle_radius = 4
         ball1 = ball(screen,WHITE,circle_pos,circle_radius)
-
+        count = 0 
         while 1:
 #For now , just fill the whole screen , aim for efficiency later
+            count = (count + 1)%(FPS)    
             screen.fill(BLACK)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return
                 if ((event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE)):
                     return
+                    """
                 if ((event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT)):
                     bat1.move_right()
                 if ((event.type == pygame.KEYDOWN) and (event.key == pygame.K_LEFT)):
                     bat1.move_left()
-                if ((event.type == pygame.KEYDOWN and event.key == pygame.K_s)):
+                    """
+                if ((event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT)):
                     bat2.move_right()
-                if ((event.type == pygame.KEYDOWN) and (event.key == pygame.K_a)):
+                if ((event.type == pygame.KEYDOWN) and (event.key == pygame.K_LEFT)):
                     bat2.move_left()
 
             ball1.move() 
-            bat1.update_stuff()
             bat2.update_stuff()
+#Ai bat moves only if the ball is moving in its direction
+            if(ball1.y_sign ==-1 and (count%20!=0)):
+             ai_bat1.ai_magic(ball1.x_pos)
+            else:
+             ai_bat1.ai_magic(screen.get_width()/2 - (screen.get_width()/2)%(ai_bat1.Rect.width/2))
+            ai_bat1.update_stuff()
             #Code for collission detection between the ball and the walls
             b_flag_sides = (ball1.x_pos-ball1.radius <= screen_rect.left) or(ball1.x_pos+ball1.radius >= screen_rect.right)
             b_flag_top = (ball1.y_pos - ball1.radius <=screen_rect.top)
@@ -142,7 +159,7 @@ class Pong(object):
             if(b_flag_top):
                 bat2.score += 1
             if(b_flag_bot):
-                bat1.score += 1
+                ai_bat1.score += 1
             if(b_flag_sides):
                 ball1.x_sign *=-1
             if(b_flag_top or b_flag_bot):
@@ -150,15 +167,15 @@ class Pong(object):
             
             #Code for collission detection between the ball and the walls
 
-            flag1 = bat1.Rect.collidepoint(ball1.x_pos,ball1.y_pos) 
+            flag1 = ai_bat1.Rect.collidepoint(ball1.x_pos,ball1.y_pos) 
             flag2 = bat2.Rect.collidepoint(ball1.x_pos,ball1.y_pos) 
 #            if(flag1):
             if(flag1):
-                if((ball1.x_pos >= bat1.Rect.left) and (ball1.x_pos <= bat1.Rect.left + bat1.Rect.width/4)):
+                if((ball1.x_pos >= ai_bat1.Rect.left) and (ball1.x_pos <= ai_bat1.Rect.left + ai_bat1.Rect.width/4)):
                     ball1.speedx +=1
                     ball1.speedy -=1
                     ball1.x_sign =-1
-                if((ball1.x_pos >= bat1.Rect.left + 3*bat1.Rect.width/4) and (ball1.x_pos <= bat1.Rect.left + bat1.Rect.width)):
+                if((ball1.x_pos >= ai_bat1.Rect.left + 3*ai_bat1.Rect.width/4) and (ball1.x_pos <= ai_bat1.Rect.left + ai_bat1.Rect.width)):
                     ball1.speedx +=1
                     ball1.speedy -=1
                     ball1.x_sign =1
@@ -178,15 +195,16 @@ class Pong(object):
 
 
             ball1.draw()
-            bat1.draw(screen)
+            ai_bat1.draw(screen)
             bat2.draw(screen)
-            msg1 = str(bat1.score)
+            ai_bat1.draw(screen)
+            msg1 = str(ai_bat1.score)
             display_box(screen,msg1,(wsize-40,30))
             msg2 = str(bat2.score)
             display_box(screen,msg2,(wsize-40,hsize-90))
             pygame.display.flip()
 
-            clock1.tick(30)
+            clock1.tick(FPS)
 
 
 
